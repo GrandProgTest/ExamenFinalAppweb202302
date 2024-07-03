@@ -1,4 +1,6 @@
-﻿using si730ebu202124343.API.Inventory.Domain.Model.Queries;
+﻿// ProductContextFacade.cs
+using si730ebu202124343.API.Inventory.Domain.Model.Commands;
+using si730ebu202124343.API.Inventory.Domain.Model.Queries;
 using si730ebu202124343.API.Inventory.Domain.Services;
 
 namespace si730ebu202124343.API.Inventory.Interfaces.ACL.Services;
@@ -11,5 +13,11 @@ public class ProductContextFacade(
     {
         var getProductBySerialNumberQuery = new GetProductBySerialNumberQuery(serialNumber);
         var result = await productQueryService.Handle(getProductBySerialNumberQuery);
-        return result?.Id ?? 0;    }
+        return result?.Id ?? 0;
+    }
+
+    public async Task UpdateProductStatusBySerialNumber(UpdateProductBySerialNumberCommand command)
+    {
+        await productCommandService.Handle(command);
+    }
 }

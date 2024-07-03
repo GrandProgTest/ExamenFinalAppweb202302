@@ -30,4 +30,24 @@ public class ProductCommandService(IProductRepository productRepository, IUnitOf
             return null;
         }
     }
+
+    public async Task<Product?> Handle(UpdateProductBySerialNumberCommand command)
+    {
+        var product = await productRepository.FindBySerialNumberAsync(command.SerialNumber);
+
+        if (product == null)
+        {
+            // Handle the case where the product is not found
+            throw new Exception("Product with the given serial number does not exist");
+        }
+
+        // Update the product status
+        product.StatusDescription = command.StatusDescription;
+
+        // Save the updated product
+        productRepository.Update(product);
+        await unitOfWork.CompleteAsync();
+
+        return product;
+    }
 }

@@ -4,12 +4,13 @@ using si730ebu202124343.API.Maintenance.Domain.Model.Commands;
 using si730ebu202124343.API.Maintenance.Domain.Repositories;
 using si730ebu202124343.API.Maintenance.Domain.Services;
 using si730ebu202124343.API.Shared.Domain.Repositories;
+using si730ebu202124343.API.Inventory.Domain.Model.Commands;
 
 namespace si730ebu202124343.API.Maintenance.Application.Internal.CommandServices;
 
-public class MaintenanceActivityCommandService(IMaintenanceActivityRepository maintenanceActivityRepository, IUnitOfWork unitOfWork, 
+public class MaintenanceActivityCommandService(IMaintenanceActivityRepository maintenanceActivityRepository, IUnitOfWork unitOfWork,
     ExternalIProductService externalIProductService)
-:IMaintenanceActivityCommandService
+    :IMaintenanceActivityCommandService
 {
     public async Task<MaintenanceActivity?> Handle(CreateMaintenanceActivityCommand command)
     {
@@ -22,6 +23,11 @@ public class MaintenanceActivityCommandService(IMaintenanceActivityRepository ma
         {
             await maintenanceActivityRepository.AddAsync(maintenanceActivity);
             await unitOfWork.CompleteAsync();
+
+            // Update the product status based on the maintenance activity result
+            var updateCommand = new UpdateProductBySerialNumberCommand(command.ProductSerialNumber, command.Result == 1 ? "OPERATIONAL" : "UNOPERATIONAL");
+            await externalIProductService.UpdateProductStatusBySerialNumber(updateCommand);
+
             return maintenanceActivity;
         }
         catch (Exception e)

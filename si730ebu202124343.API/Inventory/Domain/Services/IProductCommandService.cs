@@ -6,4 +6,5 @@ namespace si730ebu202124343.API.Inventory.Domain.Services;
 public interface IProductCommandService
 {
     Task<Product?> Handle(CreateProductCommand command);
+    Task<Product?> Handle(UpdateProductBySerialNumberCommand command);
 }

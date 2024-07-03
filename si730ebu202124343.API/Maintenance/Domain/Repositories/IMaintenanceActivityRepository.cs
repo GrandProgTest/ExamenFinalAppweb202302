@@ -5,5 +5,6 @@ namespace si730ebu202124343.API.Maintenance.Domain.Repositories;
 
 public interface IMaintenanceActivityRepository : IBaseRepository<MaintenanceActivity>
 {
+    Task<int> GetMaintenanceActivityResultBySerialNumber(string serialNumber);
     
 }

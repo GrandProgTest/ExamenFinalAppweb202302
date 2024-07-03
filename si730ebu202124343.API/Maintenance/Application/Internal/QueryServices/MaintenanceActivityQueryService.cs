@@ -13,4 +13,10 @@ public class MaintenanceActivityQueryService(IMaintenanceActivityRepository main
     {
         return await maintenanceActivityRepository.FindByIdAsync(query.MaintenanceActivityId);
     }
+    
+    public async Task<int> Handle(GetMaintenanceActivityResultBySerialNumber query)
+    {
+        var maintenanceActivity = await maintenanceActivityRepository.GetMaintenanceActivityResultBySerialNumber(query.SerialNumber);
+        return maintenanceActivity;
+    }
 }
